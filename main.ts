@@ -1,3 +1,5 @@
+/// <reference types="./@types/plugin" />
+
 function isEmpty(obj: object) {
   for (const prop in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, prop)) {
@@ -60,7 +62,7 @@ async function getResolvedVariables(collection: VariableCollection) {
       return variables
     }
 
-    variables.push ({
+    variables.push({
       id: variable.id,
       name: variable.name,
       description: variable.description,
@@ -93,15 +95,17 @@ async function getData(): Promise<Plugin.Collection[]> {
 
 figma.ui.onmessage = async (message) => {
   switch (message.type) {
-    case 'get-data':{
+    case 'get-data': {
       const data = await getData()
       figma.ui.postMessage({ type: 'data', data })
-      break }
+      break
+    }
     default:
   }
 }
 
 figma.showUI(__html__, {
+  themeColors: true,
   width: 500,
   height: 700,
 })

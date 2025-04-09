@@ -1,4 +1,4 @@
-namespace Plugin {
+declare namespace Plugin {
   export interface Mode {
     id: string
     name: string

@@ -1,28 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": [
-      "es2022"
-    ],
-    "moduleDetection": "force",
-    "module": "preserve",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./node_modules/@figma", "./@types"],
-    "allowJs": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": [
-    "**/*.ts"
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.plugin.json" }
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "files": []
 }
