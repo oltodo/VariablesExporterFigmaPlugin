@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es2019"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@figma", "./@types"],
+    "strict": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "main.ts"
+  ]
+}

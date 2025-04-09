@@ -1,0 +1,21 @@
+{
+  "id": "1491572182178544621",
+  "name": "Variables Exporter For Dev Mode",
+  "api": "1.0.0",
+  "main": "dist/main.js",
+  "ui": "dist/index.html",
+  "capabilities": [
+    "inspect",
+    "vscode"
+  ],
+  "enableProposedApi": false,
+  "documentAccess": "dynamic-page",
+  "editorType": [
+    "dev"
+  ],
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variables Exporter For Dev Mode</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="p-4 h-screen grid grid-cols-1 grid-rows-[auto_1fr] gap-4">
+      <div class="flex justify-between">
+        <button class="btn btn-sm" onclick="fetchData()">Refresh</button>
+        <div class="flex gap-2">
+          <button id="copy-button" class="btn btn-sm btn-ghost hidden" onclick="copy()">Copy to clipboard</button>
+          <button id="select-button" class="btn btn-sm btn-ghost hidden" onclick="select()">Select all</button>
+          <button class="btn btn-sm btn-primary" onclick="download()">Download</button>
+        </div>
+      </div>
+      <textarea id="data" class="textarea w-full resize-none font-mono" readonly>Loading...</textarea>
+    </div>
+
+    <script>
+      onmessage = (event) => {
+        const message = event.data.pluginMessage
+
+        switch (message.type) {
+          case 'data':
+            document.getElementById('data').value = JSON.stringify(message.data, null, 2)
+            break
+        }
+      }
+
+      function fetchData() {
+        document.getElementById('data').value = 'Loading...'
+
+        parent.postMessage(
+          {
+            pluginMessage: { type: 'get-data' },
+          },
+          '*',
+        )
+      }
+
+      function download() {
+        const data = document.getElementById('data').value
+        const blob = new Blob([data], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = 'figma-variables.json'
+        link.click()
+      }
+
+      function select() {
+        document.getElementById('data').focus()
+        document.getElementById('data').select()
+      }
+
+      function copy() {
+        navigator.clipboard.writeText('foo')
+      }
+
+      fetchData()
+
+      navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+        if (result.state === 'granted' || result.state === 'prompt') {
+          document.getElementById('copy-button').style.display = 'inline'
+        } else {
+          document.getElementById('select-button').style.display = 'inline'
+        }
+      })
+    </script>
+  </body>
+</html>
