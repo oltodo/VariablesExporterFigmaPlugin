@@ -11,7 +11,7 @@
     "build": "pnpm run build-ts && pnpm run build-ui",
     "build-ts": "tsc -p tsconfig.plugin.json",
     "build-ui": "vite build",
-    "watch": "concurrently \"pnpm run build-ts -- --watch\" \"pnpm run build-ui -- --watch\"",
+    "watch": "concurrently \"pnpm run build-ts --watch\" \"pnpm run build-ui --watch\"",
     "lint": "eslint",
     "lint-fix": "eslint --fix"
   },
