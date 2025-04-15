@@ -4,19 +4,36 @@ declare namespace Plugin {
     name: string
   }
 
-  export interface Variable {
+  export interface Variable<CollectionId = string> {
+    key: string
     id: string
     name: string
     description: string
+    remote: boolean
     type: VariableResolvedDataType
     hiddenFromPublishing: boolean
-    valuesByMode: Record<string, Exclude<VariableValue, VariableAlias>>
+    variableCollectionId: CollectionId
+    scopes: VariableScope[]
+    valuesByMode: { [modeId: string]: VariableValue }
   }
 
-  export interface Collection {
-    id: string
+  export interface Collection<CollectionId = string> {
+    key: string
+    id: CollectionId
     name: string
+    hiddenFromPublishing: boolean
     modes: Mode[]
-    variables: Variable[]
+    variableIds: string[]
+    defaultModeId: string
+  }
+
+  export interface Settings {
+    excludeHidden: boolean
+    resolveAliases: boolean
+  }
+
+  export interface Data<CollectionId = string> {
+    collections: Collection<CollectionId>[]
+    variables: Variable<CollectionId>[]
   }
 }

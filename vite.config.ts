@@ -8,6 +8,9 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 export default defineConfig({
   build: {
     emptyOutDir: false,
+    watch: {
+      exclude: ['./main.ts'],
+    },
   },
   resolve: {
     alias: {

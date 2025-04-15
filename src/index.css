@@ -3,10 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --color-*: initial;
-}
-
 /*
 --figma-color-bg: #2c2c2c;
 --figma-color-bg-brand: #198f51;
@@ -221,7 +217,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.4rem;
   --background: var(--figma-color-bg);
   --foreground: var(--figma-color-text);
   --card: oklch(1 0 0);
@@ -293,7 +289,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  [data-vaul-overlay] {
+    backdrop-filter: blur(2px);
   }
 }

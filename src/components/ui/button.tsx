@@ -24,14 +24,23 @@ const buttonVariants = cva(
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
+        sm: 'h-7 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
         lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'size-9',
+      },
+      square: {
+        true: '',
+        false: '',
       },
     },
+    compoundVariants: [
+      { square: true, size: 'default', class: 'w-9' },
+      { square: true, size: 'lg', class: 'w-10' },
+      { square: true, size: 'sm', class: 'w-7' },
+    ],
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      square: false,
     },
   },
 )
@@ -40,6 +49,7 @@ function Button({
   className,
   variant,
   size,
+  square,
   asChild = false,
   ...props
 }: React.ComponentProps<'button'> &
@@ -51,7 +61,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, square, className }))}
       {...props}
     />
   )

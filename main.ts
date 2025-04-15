@@ -1,96 +1,90 @@
 /// <reference types="./@types/plugin" />
 
-function isEmpty(obj: object) {
-  for (const prop in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-      return false
-    }
-  }
-
-  return true
+function isVariableAlias(value: VariableValue): value is VariableAlias {
+  return typeof value === 'object' && ('type' in value)
 }
 
-async function resolveValue(mode: string, value: VariableValue) {
-  if (typeof value !== 'object' || !('type' in value)) {
-    return value
-  }
+function isRemoteAlias(alias: VariableAlias): boolean {
+  return /^VariableID:[0-9a-f]{40}\/\d+:\d+$/.test(alias.id)
+}
 
-  const variable = await figma.variables.getVariableByIdAsync(value.id)
+function serializeCollection(collection: VariableCollection): Plugin.Collection {
+  return {
+    id: collection.id,
+    name: collection.name,
+    hiddenFromPublishing: collection.hiddenFromPublishing,
+    key: collection.key,
+    modes: collection.modes.map(mode => ({
+      id: mode.modeId,
+      name: mode.name,
+    })),
+    variableIds: collection.variableIds,
+    defaultModeId: collection.defaultModeId,
+  }
+}
+
+function serializeVariable(variable: Variable): Plugin.Variable {
+  return {
+    id: variable.id,
+    name: variable.name,
+    description: variable.description,
+    key: variable.key,
+    remote: variable.remote,
+    scopes: variable.scopes,
+    type: variable.resolvedType,
+    valuesByMode: variable.valuesByMode,
+    hiddenFromPublishing: variable.hiddenFromPublishing,
+    variableCollectionId: variable.variableCollectionId,
+  }
+}
+
+async function getVariableCollection(id: string) {
+  const variable = await figma.variables.getVariableCollectionByIdAsync(id)
 
   if (!variable) {
-    throw new Error(`Variable ${value.id} not found`)
+    throw new Error(`Collection '${id}' not found`)
   }
 
-  if (variable.valuesByMode[mode]) {
-    return resolveValue(mode, variable.valuesByMode[mode])
-  }
-
-  const defaultMode = Object.keys(variable.valuesByMode)[0]
-
-  if (!defaultMode) {
-    throw new Error(`No modes found for variable '${variable.name}'`)
-  }
-
-  const defaultValue = variable.valuesByMode[defaultMode]
-
-  if (!defaultValue) {
-    throw new Error(`No values found for mode '${defaultMode}'`)
-  }
-
-  return resolveValue(mode, defaultValue)
+  return variable
 }
 
-async function getResolvedVariables(collection: VariableCollection) {
-  const variables: Plugin.Variable[] = []
+async function getVariable(id: string) {
+  const variable = await figma.variables.getVariableByIdAsync(id)
 
-  for (const id of collection.variableIds) {
-    const variable = await figma.variables.getVariableByIdAsync(id)
+  if (!variable) {
+    throw new Error(`Variable '${id}' not found`)
+  }
 
-    if (!variable || variable.hiddenFromPublishing) {
-      continue
-    }
+  return variable
+}
 
-    const valuesByMode: Plugin.Variable['valuesByMode'] = {}
-    for (const [mode, value] of Object.entries(variable.valuesByMode)) {
-      // Looks a variable can be associated to modes that doesn't exist in the collection
-      if (collection.modes.some(item => item.modeId === mode)) {
-        valuesByMode[mode] = await resolveValue(mode, value)
+async function getData(): Promise<Plugin.Data> {
+  const collections: Record<string, VariableCollection> = {}
+  const variables = await figma.variables.getLocalVariablesAsync()
+
+  for (const variable of variables) {
+    for (const modeId in variable.valuesByMode) {
+      const value = variable.valuesByMode[modeId]
+
+      // Variables may have aliases that refer to variables coming from remote
+      // libraries, so we need add these variables to the list.
+      if (isVariableAlias(value) && isRemoteAlias(value)) {
+        variables.push(await getVariable(value.id))
       }
     }
 
-    if (isEmpty(valuesByMode)) {
-      return variables
+    if (variable.variableCollectionId in collections) {
+      continue
     }
 
-    variables.push({
-      id: variable.id,
-      name: variable.name,
-      description: variable.description,
-      type: variable.resolvedType,
-      hiddenFromPublishing: variable.hiddenFromPublishing,
-      valuesByMode,
-    })
+    const collection = await getVariableCollection(variable.variableCollectionId)
+    collections[collection.id] = collection
   }
 
-  return variables
-}
-
-async function getData(): Promise<Plugin.Collection[]> {
-  const collections = await figma.variables.getLocalVariableCollectionsAsync()
-
-  const data = await Promise.all(
-    collections.map(async collection => ({
-      id: collection.id,
-      name: collection.name,
-      modes: collection.modes.map(mode => ({
-        id: mode.modeId,
-        name: mode.name,
-      })),
-      variables: await getResolvedVariables(collection),
-    })),
-  )
-
-  return data.filter(collection => collection.variables.length > 0)
+  return {
+    collections: Object.values(collections).map(serializeCollection),
+    variables: variables.map(serializeVariable),
+  }
 }
 
 figma.ui.onmessage = async (message) => {
