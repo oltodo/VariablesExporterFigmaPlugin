@@ -58,48 +58,54 @@ export function SettingsForm({ defaultValues, onSubmit }: Props) {
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-96 space-y-2 text-sm" collisionPadding={16}>
-                        <p>If an alias points to another alias, the resolution will continue recursively until a non-alias value is found.</p>
-                        <p>
-                          When resolving an alias, if the target variable belongs to a different collection,
-                          the plugin attempts to resolve the value using the mode that matches the source variable’s mode (based on its
-                          {' '}
-                          <i>slugified</i>
-                          {' '}
-                          name).
-                          If no such mode exists in the target collection, the collection’s default mode will be used instead.
-                        </p>
+                        <p>The plugin supports cascading resolution, meaning it can follow chains of aliases until it reaches a concrete value.</p>
+                        <p>A key feature here is the smart handling of multi-mode variable collections. If variables are connected through multi-mode collections, the plugin attempts to match modes based on slugified mode names. If no match is found, the target collection’s default mode is used instead.</p>
+                        <p>Importantly, the resolution is always based on the original mode name—not the fallback.</p>
                         <p><b>Example:</b></p>
                         <p>
-                          Let’s say variable
+                          The variable
+                          <InlineCode>primary</InlineCode>
                           {' '}
-                          <InlineCode>Primary</InlineCode>
+                          in the
+                          <InlineCode>light</InlineCode>
                           {' '}
-                          (in mode
+                          mode of the
+                          <InlineCode>semantics</InlineCode>
                           {' '}
-                          <InlineCode>Dark</InlineCode>
-                          ) of the collection
+                          collection points to the variable
+                          <InlineCode>blue</InlineCode>
                           {' '}
-                          <InlineCode>Semantic Colors</InlineCode>
+                          in the
+                          <InlineCode>primitives</InlineCode>
                           {' '}
-                          is an alias of variable
+                          collection (which only contains the
+                          <InlineCode>dark</InlineCode>
                           {' '}
-                          <InlineCode>Blue</InlineCode>
+                          mode). That variable in turn points to
+                          <InlineCode>blue-500</InlineCode>
                           {' '}
-                          from the collection
+                          in the
+                          <InlineCode>palettes</InlineCode>
                           {' '}
-                          <InlineCode>Primitve Colors</InlineCode>
-                          .
+                          collection, which contains both
+                          <InlineCode>light</InlineCode>
+                          {' '}
+                          and
+                          <InlineCode>dark</InlineCode>
+                          {' '}
+                          modes. In this case, resolution ultimately lands on
+                          <InlineCode>blue-500</InlineCode>
+                          {' '}
+                          in the
+                          <InlineCode>light</InlineCode>
+                          {' '}
+                          mode, even though the intermediate
+                          <InlineCode>blue</InlineCode>
+                          {' '}
+                          variable belongs to a
+                          <InlineCode>dark</InlineCode>
+                          -only collection.
                         </p>
-                        <p>
-                          If the
-                          <InlineCode>Primitve Colors</InlineCode>
-                          {' '}
-                          collection has a mode named
-                          {' '}
-                          <InlineCode>Dark</InlineCode>
-                          , its value will be used.
-                        </p>
-                        <p>If it doesn’t, the plugin will fall back to the theme collection’s default mode.</p>
                       </PopoverContent>
                     </Popover>
                   </FormLabel>
@@ -132,51 +138,9 @@ export function SettingsForm({ defaultValues, onSubmit }: Props) {
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-96 space-y-2 text-sm" collisionPadding={16}>
-                        <p>If an alias points to another alias, the resolution will continue recursively until a non-alias value is found.</p>
-                        <p>
-                          When resolving an alias, if the target variable belongs to a different collection,
-                          the plugin attempts to resolve the value using the mode that matches the source variable’s mode (based on its
-                          {' '}
-                          <i>slugified</i>
-                          {' '}
-                          name).
-                          If no such mode exists in the target collection, the collection’s default mode will be used instead.
-                        </p>
-                        <p><b>Example:</b></p>
-                        <p>
-                          Let’s say variable
-                          {' '}
-                          <InlineCode>Primary</InlineCode>
-                          {' '}
-                          (in mode
-                          {' '}
-                          <InlineCode>Dark</InlineCode>
-                          ) of the collection
-                          {' '}
-                          <InlineCode>Semantic Colors</InlineCode>
-                          {' '}
-                          is an alias of variable
-                          {' '}
-                          <InlineCode>Blue</InlineCode>
-                          {' '}
-                          from the collection
-                          {' '}
-                          <InlineCode>Primitve Colors</InlineCode>
-                          .
-                        </p>
-                        <p>
-                          If the
-                          <InlineCode>Primitve Colors</InlineCode>
-                          {' '}
-                          collection has a mode named
-                          {' '}
-                          <InlineCode>Dark</InlineCode>
-                          , its value will be used.
-                        </p>
-                        <p>If it doesn’t, the plugin will fall back to the theme collection’s default mode.</p>
+                        <p>When aliases are involved, any variable that references a hidden variable will be resolved. This ensures the exported JSON always contains valid and usable resolved values—even if some of the original variables are hidden in the Figma UI.</p>
                       </PopoverContent>
                     </Popover>
-
                   </FormLabel>
                   <FormDescription>
                     Variables marked as "Hidden from publishing" will be excluded from export.

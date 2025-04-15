@@ -1,5 +1,5 @@
 import type { SettingsSchema } from './schemas'
-import * as _ from 'radashi'
+import { slugify } from './slugify'
 
 function isAlias(value: VariableValue): value is VariableAlias {
   return typeof value === 'object' && ('type' in value)
@@ -95,7 +95,7 @@ export class Transformer {
 
   private registerMode({ id, name }: Plugin.Mode) {
     if (!this.modes[id]) {
-      this.modes[id] = _.dash(name)
+      this.modes[id] = slugify(name)
     }
   }
 
@@ -112,7 +112,6 @@ export class Transformer {
     let variables = this.data.variables
 
     if (excludeHidden) {
-      collections = collections.filter(item => !item.hiddenFromPublishing)
       variables = variables.filter(item => !item.hiddenFromPublishing)
     }
 
