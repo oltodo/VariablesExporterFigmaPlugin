@@ -258,6 +258,23 @@
       },
       "hiddenFromPublishing": false,
       "variableCollectionId": "LC:2"
+    },
+    {
+      "id": "LV:7",
+      "name": "Local Variable 7",
+      "description": "",
+      "key": "e979fbe2f55be620a5a6275332dbd9fe0bee1ea0",
+      "remote": false,
+      "scopes": ["ALL_SCOPES"],
+      "type": "COLOR",
+      "valuesByMode": {
+        "LM:2": {
+          "type": "VARIABLE_ALIAS",
+          "id": "INEXISTENT VARIABLE"
+        }
+      },
+      "hiddenFromPublishing": false,
+      "variableCollectionId": "LC:2"
     }
   ]
 }

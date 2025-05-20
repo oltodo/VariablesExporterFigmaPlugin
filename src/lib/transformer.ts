@@ -49,22 +49,28 @@ export class Transformer {
   }
 
   private async resolveAlias(alias: VariableAlias, modeId: string, hiddenOnly = false): Promise<VariableValue> {
-    const variable = this.getVariableById(alias.id)
-    const collection = this.getCollectionById(variable.variableCollectionId)
-    const modeName = this.modes[modeId]
+    try {
+      const variable = this.getVariableById(alias.id)
+      const collection = this.getCollectionById(variable.variableCollectionId)
 
-    if (hiddenOnly && !variable.hiddenFromPublishing) {
+      const modeName = this.modes[modeId]
+
+      if (hiddenOnly && !variable.hiddenFromPublishing) {
+        return alias
+      }
+
+      const targetModeId = collection.modes.find(item => this.modes[item.id] === modeName)?.id || collection.defaultModeId
+      const value = variable.valuesByMode[targetModeId]
+
+      if (isAlias(value)) {
+        return this.resolveAlias(value, modeId, hiddenOnly)
+      }
+
+      return value
+    }
+    catch {
       return alias
     }
-
-    const targetModeId = collection.modes.find(item => this.modes[item.id] === modeName)?.id || collection.defaultModeId
-    const value = variable.valuesByMode[targetModeId]
-
-    if (isAlias(value)) {
-      return this.resolveAlias(value, modeId, hiddenOnly)
-    }
-
-    return value
   }
 
   private async resolveVariableValues(variable: Plugin.Variable): Promise<Plugin.Variable['valuesByMode']> {
@@ -111,16 +117,16 @@ export class Transformer {
     let collections = this.data.collections
     let variables = this.data.variables
 
-    if (excludeHidden) {
-      variables = variables.filter(item => !item.hiddenFromPublishing)
-    }
-
     variables = await Promise.all(
       variables.map(async variable => ({
         ...variable,
         valuesByMode: await this.resolveVariableValues(variable),
       })),
     )
+
+    if (excludeHidden) {
+      variables = variables.filter(item => !item.hiddenFromPublishing)
+    }
 
     // Cleanup collections
     collections = collections.reduce<Plugin.Collection[]>((acc, collection) => {

@@ -86,6 +86,7 @@ it('should transform with excludeHidden=false, resolveAliases=false', async () =
           "variableIds": [
             "LV:3",
             "LV:4",
+            "LV:7",
           ],
         },
       ],
@@ -310,6 +311,25 @@ it('should transform with excludeHidden=false, resolveAliases=false', async () =
           },
           "variableCollectionId": "LC:2",
         },
+        {
+          "description": "",
+          "hiddenFromPublishing": false,
+          "id": "LV:7",
+          "key": "e979fbe2f55be620a5a6275332dbd9fe0bee1ea0",
+          "name": "Local Variable 7",
+          "remote": false,
+          "scopes": [
+            "ALL_SCOPES",
+          ],
+          "type": "COLOR",
+          "valuesByMode": {
+            "LM:2": {
+              "id": "INEXISTENT VARIABLE",
+              "type": "VARIABLE_ALIAS",
+            },
+          },
+          "variableCollectionId": "LC:2",
+        },
       ],
     }
   `)
@@ -359,6 +379,7 @@ it('should transform with excludeHidden=true, resolveAliases=false', async () =>
           "variableIds": [
             "LV:3",
             "LV:4",
+            "LV:7",
           ],
         },
       ],
@@ -413,6 +434,25 @@ it('should transform with excludeHidden=true, resolveAliases=false', async () =>
           "valuesByMode": {
             "LM:2": "RC:1:RV:3:RM:2",
             "LM:3": "RC:1:RV:4:RM:3",
+          },
+          "variableCollectionId": "LC:2",
+        },
+        {
+          "description": "",
+          "hiddenFromPublishing": false,
+          "id": "LV:7",
+          "key": "e979fbe2f55be620a5a6275332dbd9fe0bee1ea0",
+          "name": "Local Variable 7",
+          "remote": false,
+          "scopes": [
+            "ALL_SCOPES",
+          ],
+          "type": "COLOR",
+          "valuesByMode": {
+            "LM:2": {
+              "id": "INEXISTENT VARIABLE",
+              "type": "VARIABLE_ALIAS",
+            },
           },
           "variableCollectionId": "LC:2",
         },
@@ -500,6 +540,7 @@ it('should transform with excludeHidden=false, resolveAliases=true', async () =>
           "variableIds": [
             "LV:3",
             "LV:4",
+            "LV:7",
           ],
         },
       ],
@@ -697,6 +738,25 @@ it('should transform with excludeHidden=false, resolveAliases=true', async () =>
           },
           "variableCollectionId": "LC:2",
         },
+        {
+          "description": "",
+          "hiddenFromPublishing": false,
+          "id": "LV:7",
+          "key": "e979fbe2f55be620a5a6275332dbd9fe0bee1ea0",
+          "name": "Local Variable 7",
+          "remote": false,
+          "scopes": [
+            "ALL_SCOPES",
+          ],
+          "type": "COLOR",
+          "valuesByMode": {
+            "LM:2": {
+              "id": "INEXISTENT VARIABLE",
+              "type": "VARIABLE_ALIAS",
+            },
+          },
+          "variableCollectionId": "LC:2",
+        },
       ],
     }
   `)
@@ -746,6 +806,7 @@ it('should transform with excludeHidden=true, resolveAliases=true', async () => 
           "variableIds": [
             "LV:3",
             "LV:4",
+            "LV:7",
           ],
         },
       ],
@@ -797,6 +858,25 @@ it('should transform with excludeHidden=true, resolveAliases=true', async () => 
           "valuesByMode": {
             "LM:2": "RC:1:RV:3:RM:2",
             "LM:3": "RC:1:RV:4:RM:3",
+          },
+          "variableCollectionId": "LC:2",
+        },
+        {
+          "description": "",
+          "hiddenFromPublishing": false,
+          "id": "LV:7",
+          "key": "e979fbe2f55be620a5a6275332dbd9fe0bee1ea0",
+          "name": "Local Variable 7",
+          "remote": false,
+          "scopes": [
+            "ALL_SCOPES",
+          ],
+          "type": "COLOR",
+          "valuesByMode": {
+            "LM:2": {
+              "id": "INEXISTENT VARIABLE",
+              "type": "VARIABLE_ALIAS",
+            },
           },
           "variableCollectionId": "LC:2",
         },
