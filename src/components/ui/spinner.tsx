@@ -1,8 +1,8 @@
 import type { VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
 import { Slot } from '@radix-ui/react-slot'
 import { cva } from 'class-variance-authority'
 import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const spinnerVariants = cva(
   'relative block opacity-[0.65]',
@@ -47,6 +47,7 @@ function Spinner({ ref, className, size, loading = true, asChild = false, ...pro
     >
       {Array.from({ length: 8 }).map((_, i) => (
         <span
+          // eslint-disable-next-line react/no-array-index-key
           key={i}
           className="absolute top-0 left-1/2 w-[12.5%] h-full animate-spinner-leaf-fade"
           style={{

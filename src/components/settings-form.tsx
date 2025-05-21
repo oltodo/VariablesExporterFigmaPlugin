@@ -1,6 +1,10 @@
 import type { SettingsSchema } from '@/lib/schemas'
-import { Button } from '@/components/ui/button'
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 
+import clsx from 'clsx'
+import { InfoIcon, TriangleAlertIcon } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer'
 import {
   Form,
@@ -12,10 +16,6 @@ import {
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import { settingsSchema } from '@/lib/schemas'
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import clsx from 'clsx'
-import { InfoIcon, TriangleAlertIcon } from 'lucide-react'
-import { useForm } from 'react-hook-form'
 import { InlineCode } from './ui/inline-code'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 

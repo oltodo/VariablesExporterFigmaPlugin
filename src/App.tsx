@@ -1,14 +1,14 @@
 import type { SettingsSchema } from '@/lib/schemas'
+import { DownloadIcon, Loader2Icon, RefreshCcwIcon, SettingsIcon } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import useSWR from 'swr'
+import { useDebouncedCallback } from 'use-debounce'
 import { SettingsForm } from '@/components/settings-form'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Transformer } from '@/lib/transformer'
-import { DownloadIcon, Loader2Icon, RefreshCcwIcon, SettingsIcon } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import useSWR from 'swr'
-import { useDebouncedCallback } from 'use-debounce'
 
 function download(data: string) {
   const blob = new Blob([data], { type: 'application/json' })
@@ -63,7 +63,7 @@ function App() {
     return () => {
       window.removeEventListener('message', handleMessage)
     }
-  }, [])
+  }, [stopLoading])
 
   const { data: transformedData = '' } = useSWR([data, settings], async () => {
     if (!data) {
