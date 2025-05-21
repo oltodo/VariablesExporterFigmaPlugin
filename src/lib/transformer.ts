@@ -15,6 +15,7 @@ export class Transformer {
     private settings: SettingsSchema = {
       excludeHidden: false,
       resolveAliases: false,
+      excludeTypes: [],
     },
   ) {
     this.modes = {}
@@ -106,7 +107,7 @@ export class Transformer {
   }
 
   async transform() {
-    const { excludeHidden } = this.settings
+    const { excludeHidden, excludeTypes } = this.settings
 
     for (const collection of this.data.collections) {
       for (const mode of collection.modes) {
@@ -126,6 +127,10 @@ export class Transformer {
 
     if (excludeHidden) {
       variables = variables.filter(item => !item.hiddenFromPublishing)
+    }
+
+    if (excludeTypes) {
+      variables = variables.filter(variable => !excludeTypes.includes(variable.type))
     }
 
     // Cleanup collections

@@ -26,6 +26,7 @@ function App() {
   const [settings, setSettings] = useState<SettingsSchema>({
     resolveAliases: false,
     excludeHidden: false,
+    excludeTypes: [],
   })
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 

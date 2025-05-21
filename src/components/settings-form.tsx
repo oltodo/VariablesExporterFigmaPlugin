@@ -1,8 +1,8 @@
 import type { SettingsSchema } from '@/lib/schemas'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-
 import clsx from 'clsx'
 import { InfoIcon, TriangleAlertIcon } from 'lucide-react'
+import { toggle } from 'radash'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer'
@@ -15,7 +15,8 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
-import { settingsSchema } from '@/lib/schemas'
+import { settingsSchema, variableTypes } from '@/lib/schemas'
+import { Checkbox } from './ui/checkbox'
 import { InlineCode } from './ui/inline-code'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
@@ -151,6 +152,44 @@ export function SettingsForm({ defaultValues, onSubmit }: Props) {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="excludeTypes"
+            render={({ field }) => (
+              <FormItem className="rounded-lg border p-3 shadow-sm space-y-2">
+                <div className="space-y-0.5">
+                  <FormLabel>
+                    Types
+                  </FormLabel>
+                  <FormDescription>
+                    Types of variables to include.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <div className="flex gap-8">
+                    {variableTypes.map(type => (
+                      <div key={type} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={type}
+                          checked={!field.value.includes(type)}
+                          onClick={() => {
+                            field.onChange(toggle(field.value, type))
+                          }}
+                        />
+                        <label
+                          htmlFor={type}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {type}
+                        </label>
+                      </div>
+
+                    ))}
+                  </div>
                 </FormControl>
               </FormItem>
             )}
